@@ -1,6 +1,6 @@
 # Runfaster card game
 
-A card game run faster(跑得快) implementation with phaser 3
+A card game "run faster(跑得快)" implementation with phaser 3
 
 ### Requirements
 
