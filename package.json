@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "build": "webpack",
-    "start": "npm run build && webpack-dev-server --port=8000"
+    "start": "npm run build && webpack-dev-server --port=8000",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -19,9 +20,13 @@
   },
   "homepage": "https://github.com/photonstorm/phaser3-project-template#readme",
   "devDependencies": {
-    "webpack-dev-server": "^2.11.0",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
+    "babel-jest": "^24.0.0",
+    "jest": "^24.0.0",
+    "raw-loader": "^0.5.1",
     "webpack": "^3.4.1",
-    "raw-loader": "^0.5.1"
+    "webpack-dev-server": "^2.11.0"
   },
   "dependencies": {
     "phaser": "^3.3.0"
