@@ -7,3 +7,7 @@
 * [Markdown cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
 * [UML cheat sheet 1](http://umich.edu/~eecs381/handouts/UMLNotationSummary.pdf)
 * [UML cheat sheet 2](https://loufranco.com/wp-content/uploads/2012/11/cheatsheet.pdf)
+
+## Frameworks
+* [JS game engine - Phaser 3](https://phaser.io/phaser3)
+* [JS unit test - JEST](https://jestjs.io/)
