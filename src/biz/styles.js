@@ -70,8 +70,22 @@ class BombS extends Style {
     }
 }
 
+class TripleBringOneS extends Style {
+    constructor(){
+        super("TripleBringOne");
+    }
+    validate(cards){
+        if(cards.length == 4){
+            if([new Set(cards)].length == 2 && [new Set(cards)]+[new Set(cards)].sort() == cards.sort()){
+                return true
+            }
+        }
+        return false
+    }
+}
+
 // findStyle function
-let STYLES = [new SingleS(), new DoubleS(), new SingleConnectS(), new TripleS(), new BombS()];
+let STYLES = [new SingleS(), new DoubleS(), new SingleConnectS(), new TripleS(), new BombS(), new TripleBringOneS()];
 function findStyle(cards){
     cards.sort((a, b) => a.rank - b.rank);
     for (let i = 0; i < STYLES.length; i++){
