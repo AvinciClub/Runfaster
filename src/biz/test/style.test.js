@@ -33,8 +33,8 @@ test("Bomb style", () => {
 
 test("Single connect style", () => {
     let cards = [new Card('H', '3'), 
+        new Card('S', '5'),    
         new Card('C', '4'),
-        new Card('S', '5'),
         new Card('D', '6')
     ];
     let style = findStyle(cards);
