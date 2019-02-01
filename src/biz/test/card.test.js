@@ -1,4 +1,4 @@
-import Card from '../card'
+import Card from '../card';
 
 test("Card heart 2's rank is 13", () => {
     let c = new Card('H', '2');
