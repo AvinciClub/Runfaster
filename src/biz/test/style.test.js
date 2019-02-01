@@ -44,3 +44,27 @@ test("Single connect style", () => {
     style = findStyle(cards);
     expect(style.name).toBe("SingleConnect");
 });
+
+test("Single connect style", () => {
+    let cards = [new Card('H', '3'), 
+        new Card('S', '5'),    
+        new Card('C', '4'),
+        new Card('D', '6')
+    ];
+    let style = findStyle(cards);
+    expect(style).toBeNull();
+
+    cards.push(new Card('H', '7'))
+    style = findStyle(cards);
+    expect(style.name).toBe("SingleConnect");
+});
+
+test("Triple bring one", () => {
+    let cards = [new Card('H', '4'),
+        new Card('S', '4'),
+        new Card('D', '4'),    
+        new Card('H', 'J'),             
+    ];
+    let style = findStyle(cards);
+    expect(style.name).toBe("TripleBringOne")
+})
