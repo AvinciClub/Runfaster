@@ -67,4 +67,12 @@ test("Triple bring one", () => {
     ];
     let style = findStyle(cards);
     expect(style.name).toBe("TripleBringOne")
-})
+    
+    cards = [new Card('H', '4'),
+        new Card('S', '4'),
+        new Card('D', '4'),    
+        new Card('H', '3'),             
+    ];
+    let style = findStyle(cards);
+    expect(style.name).toBe("TripleBringOne")    
+});
