@@ -76,9 +76,11 @@ class TripleBringOneS extends Style {
     }
     validate(cards){
         if(cards.length == 4){
-            if([new Set(cards)].length == 2 && [new Set(cards)]+[new Set(cards)].sort() == cards.sort()){
-                return true
-            }
+            if((cards[0].rank == cards[1].rank && cards[1].rank == cards[2].rank) 
+                || (cards[1].rank == cards[2].rank && cards[1].rank == cards[3].rank) &&
+                (cards[0].rank != cards[3].rank)){
+                    return true
+                }
         }
         return false
     }
