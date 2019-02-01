@@ -1,5 +1,7 @@
 import User from "../user";
 
-test("user name", () => {
-    expect((new User("Hello")).name).toBe("Hello");
-})
+test("User hello with initial score", () => {
+    let u = new User("Hello");
+    expect(u.name).toBe("Hello");
+    expect(u.score).toBe(0);
+});

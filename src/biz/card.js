@@ -17,6 +17,7 @@ class Card {
     };
 
     // suit - "S", "C", "H", "D"
+    // face - '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'
     constructor(suit, face){
         this.suit = suit;
         this.face = face;
