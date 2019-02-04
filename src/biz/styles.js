@@ -47,6 +47,26 @@ class SingleConnectS extends Style {
     }
 }
 
+class DoubleConnectS extends Style {
+    constructor(){
+        super("DoubleConnect");
+    }s
+    validate(cards){
+        for(let i = 0; i < cards.length-1; i++){
+            //If even, card and next should be equal, If index odd, next card should be one greater than before
+            if((i % 2 == 0 && cards[i].rank == cards[i+1].rank)
+                || (i % 2 != 0 && cards[i].rank+1 == cards[i+1].rank)){
+                continue;
+            }
+            else{
+                return false;
+            }
+        }
+        return cards.length > 2;
+    }
+}
+
+
 class TripleS extends Style {
     constructor(){
         super("Triple");
@@ -55,6 +75,41 @@ class TripleS extends Style {
         return cards.length == 3 
             && cards[0].rank == cards[1].rank 
             && cards[0].rank == cards[2].rank;
+    }
+}
+
+class TripleConnectS extends Style {
+    constructor(){
+        super("TripleConnect");
+    }
+    validate(cards){
+        if(cards.length%3 == 0 && cards.length != 3 && cards.length != 0){
+            for(let i = 0; i < cards.length-1; i++){
+                if(((i+1) % 3 == 0 && cards[i].rank+1 == cards[i+1].rank)|| 
+                    ((i+1) % 3 != 0 && cards[i].rank == cards[i+1].rank)){
+                    continue;
+                }
+                else{
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+}
+ 
+class FourBringTwo extends Style {
+    constructor(){
+        super("FourBringTwo");
+    }
+    validate(cards){
+        if((cards.length == 6) && 
+        ((cards[0].rank == cards[1].rank && cards[1].rank == cards[2].rank && cards[2].rank == cards[3].rank) 
+        || (cards[5].rank == cards[2].rank && cards[2].rank == cards[3].rank && cards[3].rank == cards[4].rank))){
+            return true;
+        }
+        return false;
     }
 }
 
@@ -87,7 +142,10 @@ class TripleBringOneS extends Style {
 }
 
 // findStyle function
-let STYLES = [new SingleS(), new DoubleS(), new SingleConnectS(), new TripleS(), new BombS(), new TripleBringOneS()];
+let STYLES = [new SingleS(), new DoubleS(), 
+            new SingleConnectS(), new TripleS(), 
+            new BombS(), new TripleBringOneS(), 
+            new DoubleConnectS(), new TripleConnectS(), new FourBringTwo()];
 function findStyle(cards){
     cards.sort((a, b) => a.rank - b.rank);
     for (let i = 0; i < STYLES.length; i++){

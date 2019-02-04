@@ -29,4 +29,16 @@ class Card {
     }
 }
 
+
+function shuffle(cards){
+    let shuffled = []
+    while(cards.length > 1){
+        let Random = Math.floor(Math.random() * cards.length)-1;
+        shuffled.push(cards[Random]);
+        cards.splice(Random, 1);
+    }
+    return shuffled
+}
+
 export default Card;
+export {shuffle};
