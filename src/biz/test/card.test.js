@@ -1,4 +1,4 @@
-import Card, {shuffle} from '../card';
+import Card, {shuffle, createCardDeck} from '../card';
 
 test("Card heart 2's rank is 13", () => {
     let c = new Card('H', '2');
@@ -16,14 +16,12 @@ test("Card heart 3", () => {
 });
 
 test("Shuffle", () => {
-    let c = [];
-    for(let i = 0; i<25; i++){
-        c.push(new Card('H', String(Math.floor(Math.random()*13))));
-    }
-    let s1 = shuffle(c);
+    let c = createCardDeck();
+    let s1 = shuffle(c.slice());
     expect(s1).not.toEqual(c);
-
-    let s2 = shuffle(c);
-    expect(s1).not.toEqual(s2)
+    expect(c.length).toEqual(s1.length)
+    for (let i = 0; i < c.length; i++){
+        expect(s1).toContain(c[i]);
+    }
 });
 

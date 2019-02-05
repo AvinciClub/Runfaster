@@ -29,16 +29,39 @@ class Card {
     }
 }
 
+// Create initial card dech for runfaster
+function createCardDeck(){
+    let ret = [];
+    const suits = 'SCHD';
+    const faces = '3456789JQK';
+    for (let s = 0; s < suits.length; s++){
+        for (let f = 0; f < faces.length; f++){
+            ret.push(new Card(suits[s], faces[f]));
+        }
+        ret.push(new Card(suits[s], '10'));
+    }
+    ret.push(new Card('S', 'A'));
+    ret.push(new Card('C', 'A'));
+    ret.push(new Card('H', 'A'));
+    ret.push(new Card('H', '2'));  
+    return ret;  
+}
 
+// Shuffle cards
 function shuffle(cards){
     let shuffled = []
-    while(cards.length > 1){
-        let Random = Math.floor(Math.random() * cards.length)-1;
+    while(cards.length > 0){
+        let Random = Math.floor(Math.random() * cards.length);
         shuffled.push(cards[Random]);
         cards.splice(Random, 1);
     }
+    //shuffled.push(cards[0])
     return shuffled
 }
 
+function initialDeck(){
+    return shuffle(createCardDeck());
+}
+
 export default Card;
-export {shuffle};
+export {shuffle, createCardDeck, initialDeck};
