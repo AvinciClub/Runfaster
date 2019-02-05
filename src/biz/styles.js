@@ -4,7 +4,13 @@ import Card from './card'
 
 class Style {
     constructor(name){
-        this.name = name;
+        this.name = name; // Style name
+
+        // Style rank index
+        // e.g. for TripleBringOne, the second card(rankIndex = 1) decides style rank
+        // for FourthBringTwo, the third card(randkIndex = 2) decides style rank
+        // for all other styles, the first card decides style rank
+        this.rankIndex = 0; 
     }
 
     validate(cards){
@@ -102,6 +108,7 @@ class TripleConnectS extends Style {
 class FourBringTwo extends Style {
     constructor(){
         super("FourBringTwo");
+        this.rankIndex = 2;
     }
     validate(cards){
         if((cards.length == 6) && 
@@ -128,6 +135,7 @@ class BombS extends Style {
 class TripleBringOneS extends Style {
     constructor(){
         super("TripleBringOne");
+        this.rankIndex = 2;
     }
     validate(cards){
         if(cards.length == 4){
