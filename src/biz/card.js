@@ -27,6 +27,10 @@ class Card {
     is3Heart(){
         return this.face =='3' && this.suit == 'H';
     }
+
+    get gene(){
+        return this.face + this.suit;
+    }
 }
 
 // Create initial card dech for runfaster
@@ -63,10 +67,20 @@ function initialDeck(){
     return shuffle(createCardDeck());
 }
 
-function splitDeck(numOfUsers, deckInput){
+function splitDeck(numOfUsers, deck){
+    let length = deck.length;
+    let ret = [];
+    for(let i = 0; i<numOfUsers-1; i++){
+        ret.push(deck.slice(0, Math.floor(length/numOfUsers)));
+        deck.splice(Math.floor(length/numOfUsers));
+    }
+    ret.push(deck)
+    return ret
+}
 
-
+function createDeckGroups(numOfGroups){
+    return splitDeck(numOfGroups, initialDeck());
 }
 
 export default Card;
-export {shuffle, createCardDeck, initialDeck};
+export {shuffle, createCardDeck, initialDeck, createDeckGroups};

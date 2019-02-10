@@ -25,3 +25,8 @@ test("Shuffle", () => {
     }
 });
 
+test("Gene", () => {
+    let c = new Card('S', '10');
+    expect(c.gene).toBe("10S");
+})
+
