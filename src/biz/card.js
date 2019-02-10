@@ -82,5 +82,19 @@ function createDeckGroups(numOfGroups){
     return splitDeck(numOfGroups, initialDeck());
 }
 
+function deckContains(suit, face, deck){
+    for (let c of deck){
+        if (c.suit == suit && c.fac == face){
+            return true;
+        }
+    }
+    return false;
+}
+
+function deckContains3Heart(deck){
+    return deckContains('H', '3');
+}
+
 export default Card;
-export {shuffle, createCardDeck, initialDeck, createDeckGroups};
+export {shuffle, createCardDeck, initialDeck, createDeckGroups,
+    deckContains, deckContains3Heart};

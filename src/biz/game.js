@@ -1,4 +1,5 @@
 import User, * as U from './user';
+import Card, * as C from './card';
 
 class Game {
     constructor(){
@@ -9,10 +10,14 @@ class Game {
         this.owner = null; // The user created this game
 
         // state related properties
-        this.state = {}; // State is an object of mapping of user->cards
-        this.curUser = null; // User on turn
-        this.curStyle = null; // current style        
+        this.state = []; // State is an object of mapping of user->cards
+        this.curUser = -1; // User on turn
+        this.curStyle = null; // current style 
+        this.curStyleRand = 0; // current style rank       
         this.winner = null; // Game winner
+
+        // action list
+        this.actions = [];
     }
 
     join(user){
@@ -23,9 +28,18 @@ class Game {
     }
     start(){
         if (this.canStart()){
-
+            // Initialize state
+            cardGroups = C.createDeckGroups(this.users.length);
+            for (let i = 0; i < this.users.length; i++){
+                this.state.push(cardGroups[i]);
+                // Set current user
+                if (curUser == -1){
+                    if (C.deckContains3Heart(cardGroups[i])){
+                        this.curUser = i;
+                    }   
+                }
+            }
         }
-
     }
 
     // Check whether the action is valid
@@ -33,6 +47,20 @@ class Game {
     // action represents one user draw some cards.
     // if 'cards' property is null, it means 'pass'
     validateAction(action){
+        if (action != null && action.cards.length == 0){ // Not pass must have cards
+            return false;
+        }
+        // First draw
+        if (this.actions.length == 0){
+
+            if (action == null) {  // cannot be pass
+                return false;
+            }
+            if (!c.deckContains3Heart(action.cards)){
+                return false;
+            }
+
+        }
         if (!action){
             return false;
         }
@@ -47,6 +75,10 @@ class Game {
  
     canStart(){
         return this.users.length >= 3;
+    }
+
+    _nextUserIndex(){
+        
     }
    
    
