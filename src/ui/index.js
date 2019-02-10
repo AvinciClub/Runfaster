@@ -1,5 +1,5 @@
 import 'phaser';
-import Card, {initialDeck} from '../biz/card';
+import Card, {initialDeck, createDeckGroups} from '../biz/card';
 
 
 var config = {
@@ -15,17 +15,6 @@ var config = {
 
 var game = new Phaser.Game(config);
 
-function splitDeck(numOfUsers, deck){
-    let length = deck.length;
-    let ret = [];
-    for(let i = 0; i<numOfUsers-1; i++){
-        ret.push(deck.slice(0, Math.floor(length/numOfUsers)));
-        deck.splice(Math.floor(length/numOfUsers));
-    }
-    ret.push(deck)
-    return ret
-    
-}
 
 function loadCards(that){
     const suits = 'SCHD';
@@ -53,17 +42,16 @@ function preload()
 
 function create ()
 {
-    var logo = this.add.image(400, 150, 'AC');
     //Changed later on, Number of Users
     let NumOfUsers = 3
-    let CardBiz = splitDeck(NumOfUsers, initialDeck())
+    let CardBiz = createDeckGroups(NumOfUsers)
     let CardsUi = []
     for(let y = 0; y<CardBiz.length; y++){
         CardsUi.push([])
         for(let i = 0; i<CardBiz[y].length; i++){
-            CardsUi[y].push(this.add.image(i*100, y*100, CardBiz[y][i].face + CardBiz[y][i].suit))
-
+            CardsUi[y].push(this.add.image(i*50, y*100, CardBiz[y][i].gene))
+            CardsUi[y][i].setScale(0.15)
         }
     }
-    this.add.sprite(table)
+    this.add.sprite(400,310,'table').setScale(0.9)
 }
