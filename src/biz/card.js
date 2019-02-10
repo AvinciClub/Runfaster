@@ -63,5 +63,10 @@ function initialDeck(){
     return shuffle(createCardDeck());
 }
 
+function splitDeck(numOfUsers, deckInput){
+
+
+}
+
 export default Card;
 export {shuffle, createCardDeck, initialDeck};
