@@ -72,7 +72,7 @@ function splitDeck(numOfUsers, deck){
     let ret = [];
     for(let i = 0; i<numOfUsers-1; i++){
         ret.push(deck.slice(0, Math.floor(length/numOfUsers)));
-        deck.splice(Math.floor(length/numOfUsers));
+        deck = deck.slice(Math.floor(length/numOfUsers), deck.length);
     }
     ret.push(deck)
     return ret
