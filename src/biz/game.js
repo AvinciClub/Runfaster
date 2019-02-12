@@ -13,16 +13,21 @@ class Game {
         this.state = []; // State is an object of mapping of user->cards
         this.curUser = -1; // User on turn
         this.curStyle = null; // current style 
-        this.curStyleRand = 0; // current style rank       
+        this.curStyleRank = 0; // current style rank       
         this.winner = null; // Game winner
 
         // action list
         this.actions = [];
     }
 
+    // join a game
     join(user){
-        if (this.users.length < 3)
+        if (this.users.length < 3){
+            if (this.users.length == 1){
+                this.owner = user;
+            }
             this.users.push(user);
+        }
         else
             console.log("No seat left for the game.")
     }
@@ -77,10 +82,21 @@ class Game {
         return this.users.length >= 3;
     }
 
-    _nextUserIndex(){
-        
+    _nextUser(){
+        if (this.curUser == this.users.length - 1){
+            this.curUser = 0;
+        }
+        else{
+            this.curUser++;
+        }       
     }
-   
+    
+    _drawCards(action){
+        let deck = this.state[action.user];
+        for (let c of deck){
+
+        }
+    }
    
 }
 
