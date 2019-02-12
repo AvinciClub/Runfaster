@@ -14,13 +14,15 @@ function calcAngle(angle){
 }
 
 
-
+// Size constants
+const WIDTH = 700;
+const HEIGHT = 700;
 
 var config = {
     type: Phaser.AUTO,
     parent: 'phaser-example',
-    width: 800,
-    height: 600,
+    width: WIDTH,
+    height: HEIGHT,
     scene: {
         preload: preload,
         create: create
@@ -52,12 +54,13 @@ function preload()
 {
     this.load.image('table', 'assets/table.png');
     this.load.image('back', 'assets/cards/back.png');
-    loadCards(this)
+    loadCards(this);
 }
 
 function create ()
 {
-    this.add.sprite(400,310,'table').setScale(0.9)
+    this.bg = this.add.image(WIDTH/2,HEIGHT/2,'table');
+    this.bg.setDisplaySize(WIDTH, HEIGHT);
     //Changed later on, Number of Users
     let NumOfUsers = 3
     let CardBiz = createDeckGroups(NumOfUsers)
