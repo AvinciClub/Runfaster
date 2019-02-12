@@ -13,7 +13,7 @@ class Game {
         this.state = []; // State is an object of mapping of user->cards
         this.curUser = -1; // User on turn
         this.curStyle = null; // current style 
-        this.curStyleRand = 0; // current style rank       
+        this.curStyleRank = 0; // current style rank       
         this.winner = null; // Game winner
 
         // action list
