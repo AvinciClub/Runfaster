@@ -1,6 +1,20 @@
 import 'phaser';
 import Card, {initialDeck, createDeckGroups} from '../biz/card';
 
+function calcX(starX, angle, radius){
+    return starX + radius*Math.cos(angle)
+}
+
+function calcY(starY, angle, radius){
+    return starY + radius*Math.sin(angle)
+}
+
+function calcAngle(angle){
+    return 90-angle
+}
+
+
+
 
 var config = {
     type: Phaser.AUTO,
@@ -37,21 +51,31 @@ function loadCards(that){
 function preload()
 {
     this.load.image('table', 'assets/table.png');
+    this.load.image('back', 'assets/cards/back.png');
     loadCards(this)
 }
 
 function create ()
 {
+    this.add.sprite(400,310,'table').setScale(0.9)
     //Changed later on, Number of Users
     let NumOfUsers = 3
     let CardBiz = createDeckGroups(NumOfUsers)
     let CardsUi = []
-    for(let y = 0; y<CardBiz.length; y++){
+    for(let y = 0; y<NumOfUsers; y++){
         CardsUi.push([])
         for(let i = 0; i<CardBiz[y].length; i++){
-            CardsUi[y].push(this.add.image(i*50, y*100, CardBiz[y][i].gene))
+            if(y == 0){
+                CardsUi[y].push(this.add.image(calcX(400, -Math.PI/CardBiz[y].length * (i+1),200),
+                calcY(500, -Math.PI/CardBiz[y].length * (i+1),200), 
+                CardBiz[y][i].gene))
+                CardsUi[y][i].angle = calcAngle(180/CardBiz[y].length * (i+1))
+                console.log(180/CardBiz[y].length * (i+1))
+            }
+            else{
+                CardsUi[y].push(this.add.image('back'))
+            }
             CardsUi[y][i].setScale(0.15)
         }
     }
-    this.add.sprite(400,310,'table').setScale(0.9)
 }
