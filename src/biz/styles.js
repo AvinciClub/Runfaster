@@ -18,6 +18,16 @@ class Style {
     }
 }
 
+
+class PassS extends Style {
+    constructor(){
+        super("Pass");
+    }
+    validate(cards){
+        return cards == null;
+    }
+}
+
 class SingleS extends Style {
     constructor(){
         super("Single");
