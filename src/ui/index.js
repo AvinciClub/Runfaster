@@ -2,21 +2,27 @@ import 'phaser';
 import Card, {initialDeck, createDeckGroups} from '../biz/card';
 
 function calcX(starX, angle, radius){
-    return starX + radius*Math.cos(angle)
+    return starX - radius*Math.cos(angle)
 }
 
 function calcY(starY, angle, radius){
-    return starY + radius*Math.sin(angle)
+    return starY - radius*Math.sin(angle)
 }
 
 function calcAngle(angle){
     return 90-angle
 }
 
+function radianToDegrees(radian){
+    return radian*180/Math.PI;
+}
+
 
 // Size constants
-const WIDTH = 700;
-const HEIGHT = 700;
+const WIDTH = 900;
+const HEIGHT = 900;
+const GAMMA = Math.PI/3;
+const DECK_RADIUS = 300;
 
 var config = {
     type: Phaser.AUTO,
@@ -69,16 +75,24 @@ function create ()
         CardsUi.push([])
         for(let i = 0; i<CardBiz[y].length; i++){
             if(y == 0){
-                CardsUi[y].push(this.add.image(calcX(400, -Math.PI/CardBiz[y].length * (i+1),200),
-                calcY(500, -Math.PI/CardBiz[y].length * (i+1),200), 
+                let alpha = Math.PI - (Math.PI - GAMMA) / 2 - (GAMMA * (CardBiz[y].length - i))/CardBiz[y].length;
+                CardsUi[y].push(this.add.image(calcX(WIDTH/2, alpha, DECK_RADIUS),
+                calcY(HEIGHT * 7 / 6, alpha, DECK_RADIUS), 
                 CardBiz[y][i].gene))
-                CardsUi[y][i].angle = calcAngle(180/CardBiz[y].length * (i+1))
-                console.log(180/CardBiz[y].length * (i+1))
+                CardsUi[y][i].angle = calcAngle(180-radianToDegrees(alpha))
             }
-            else{
-                CardsUi[y].push(this.add.image('back'))
+            else if(y==1){
+                CardsUi[y].push(this.add.image(100, HEIGHT/2-(CardBiz[y].length/2*25)+i*25, 'back'))
+                CardsUi[y][i].angle = 90
             }
-            CardsUi[y][i].setScale(0.15)
+            else if(y==2){
+                CardsUi[y].push(this.add.image(WIDTH*7/8, HEIGHT/2-(CardBiz[y].length/2*25)+i*25, 'back'))
+                CardsUi[y][i].angle = -90
+            }
+            else if(y==3){
+                CardsUi[y].push(this.add.image(WIDTH/2-(CardBiz[y].length/2*25)+i*25, HEIGHT/8, 'back'))
+            }
+            CardsUi[y][i].setScale(0.3)
         }
     }
 }
