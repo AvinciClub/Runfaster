@@ -17,6 +17,28 @@ function radianToDegrees(radian){
     return radian*180/Math.PI;
 }
 
+function decorateSprite(s){
+    s.popX = 0;
+    s.popY = 0;
+    s.originX = s.body.x;
+    s.originY = s.body.y;
+    s.poppedUp = false;
+
+    s.popUp = function(){
+        this.setX(this.popX);
+        this.setY(this.popY);
+        this.poppedUp = true;
+    };
+
+    s.dropDown = function(){
+        this.setX(this.originX);
+        this.setY(this.originY);
+        this.poppedUp = false;
+    };
+
+    return s;
+}
+
 
 // Size constants
 const WIDTH = 900;
@@ -29,6 +51,12 @@ var config = {
     parent: 'phaser-example',
     width: WIDTH,
     height: HEIGHT,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            debug: false
+        }
+    },
     scene: {
         preload: preload,
         create: create
@@ -76,23 +104,31 @@ function create ()
         for(let i = 0; i<CardBiz[y].length; i++){
             if(y == 0){
                 let alpha = Math.PI - (Math.PI - GAMMA) / 2 - (GAMMA * (CardBiz[y].length - i))/CardBiz[y].length;
-                CardsUi[y].push(this.add.image(calcX(WIDTH/2, alpha, DECK_RADIUS),
+                CardsUi[y].push(decorateSprite(this.physics.add.sprite(calcX(WIDTH/2, alpha, DECK_RADIUS),
                 calcY(HEIGHT * 7 / 6, alpha, DECK_RADIUS), 
-                CardBiz[y][i].gene))
-                CardsUi[y][i].angle = calcAngle(180-radianToDegrees(alpha))
+                CardBiz[y][i].gene).setInteractive()));
+                CardsUi[y][i].popX = calcX(WIDTH/2, alpha, DECK_RADIUS * 6/5);
+                CardsUi[y][i].popY = calcY(HEIGHT * 7 / 6, alpha, DECK_RADIUS * 6/5);
+                CardsUi[y][i].angle = calcAngle(180-radianToDegrees(alpha));
             }
             else if(y==1){
-                CardsUi[y].push(this.add.image(100, HEIGHT/2-(CardBiz[y].length/2*25)+i*25, 'back'))
+                CardsUi[y].push(this.physics.add.sprite(100, HEIGHT/2-(CardBiz[y].length/2*25)+i*25, 'back'))
                 CardsUi[y][i].angle = 90
             }
             else if(y==2){
-                CardsUi[y].push(this.add.image(WIDTH*7/8, HEIGHT/2-(CardBiz[y].length/2*25)+i*25, 'back'))
+                CardsUi[y].push(this.physics.add.sprite(WIDTH*7/8, HEIGHT/2-(CardBiz[y].length/2*25)+i*25, 'back'))
                 CardsUi[y][i].angle = -90
             }
             else if(y==3){
-                CardsUi[y].push(this.add.image(WIDTH/2-(CardBiz[y].length/2*25)+i*25, HEIGHT/8, 'back'))
+                CardsUi[y].push(this.physics.add.sprite(WIDTH/2-(CardBiz[y].length/2*25)+i*25, HEIGHT/8, 'back'))
             }
             CardsUi[y][i].setScale(0.3)
+            CardsUi[y][i].on('pointerover',function(pointer){
+                CardsUi[y][i].popUp();
+            })
+            CardsUi[y][i].on('pointerout',function(pointer){
+                CardsUi[y][i].dropDown();
+            })
         }
     }
 }
