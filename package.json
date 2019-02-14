@@ -30,6 +30,7 @@
     "webpack-dev-server": "^2.11.0"
   },
   "dependencies": {
-    "phaser": "^3.3.0"
+    "phaser": "^3.3.0",
+    "wolfy87-eventemitter": "^5.2.5"
   }
 }

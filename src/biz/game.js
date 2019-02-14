@@ -1,6 +1,7 @@
 import User, * as U from './user';
 import Card, * as C from './card';
 import findStyle, * as S from './styles';
+import EventEmitter from 'wolfy87-eventemitter';
 
 class Game {
     constructor(){
