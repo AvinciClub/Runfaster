@@ -1,5 +1,6 @@
 import User, * as U from './user';
 import Card, * as C from './card';
+import findStyle, * as S from './styles';
 
 class Game {
     constructor(){
@@ -13,7 +14,8 @@ class Game {
         this.state = []; // State is an object of mapping of user->cards
         this.curUser = -1; // User on turn
         this.curStyle = null; // current style 
-        this.curStyleRank = 0; // current style rank       
+        this.curStyleRank = 0; // current style rank  
+        this.passCount = 0; // How many user passed in a row     
         this.winner = null; // Game winner
 
         // action list
@@ -47,34 +49,103 @@ class Game {
         }
     }
 
-    // Check whether the action is valid
-    // action is an object with 'user' and 'cards' properties.
-    // action represents one user draw some cards.
-    // if 'cards' property is null, it means 'pass'
-    validateAction(action){
-        if (action != null && action.cards.length == 0){ // Not pass must have cards
-            return false;
-        }
+    // Check whether the draw is valid
+    // if 'cards' is null, it means 'pass'
+    validateDraw(cards){
         // First draw
         if (this.actions.length == 0){
-
-            if (action == null) {  // cannot be pass
+            if (cards == null) {  // cannot be pass
                 return false;
             }
-            if (!c.deckContains3Heart(action.cards)){
+            if (!c.deckContains3Heart(cards)){ // must have heart 3
                 return false;
             }
-
         }
-        if (!action){
+
+        // keep one at last
+        if (this.state[this.curUser].length == cards.length && cards.length != 1){
             return false;
+        }
+        
+
+        let s = findStyle(cards);
+        if (s == null){ // Not valid style
+            return false;
+        }
+        else{
+            if (this._isStartOfRound){
+                if (s.name == "Pass"){
+                    return false;
+                }
+                return true;
+            }
+            else{
+                if (s.name != this.curStyle.name){
+                    if (s.name !== "Pass"){
+                        return false;
+                    }
+                    else{
+                        return true;
+                    }
+                }
+                else{
+                    if (cards[s.rankIndex] <= this.curStyleRank){
+                        return false;
+                    }
+                    else{
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
+    draw(cards){
+        if (this.users[this.curUser] != U.me){
+            throw "It's not your turn.";
+        }
+        if (validateDraw(cards)){
+            // Save action to database
+            let action = {user: this.curUser, cards: cards };
         }
 
     }
 
     // dispatch the action, this will change the state
     dispatch(action){
+        // Book keeping action
+        this.actions.push(action);
 
+        // Update state
+        if(action.cards != null){
+            C.removeFromDeck(this.state[action.user], action.cards);
+            // Check winner
+            if (this.sate[action.user].length == 0){
+                this.winner = action.user;
+                //TBD: Emit winner event
+                return;
+            }
+        }
+        
+        // Set style
+        let s = findStyle(action.cards);
+        if (this._isStartOfRound()){
+            this.curStyle = s;
+            this.curStyleRank = action.cards[s.rankIndex];
+        }
+
+        // Set pass count
+        if (s == 'Pass'){
+            this.passCount++;
+ 
+            // Check end of round
+            if (this._shouldEndRound()){
+                this._endRound();
+            }           
+        }
+        else{
+            this.passCount = 0; // reset pass count
+        }
     } 
     
  
@@ -96,6 +167,21 @@ class Game {
         for (let c of deck){
 
         }
+    }
+
+    _isStartOfRound(){
+        return this.curStyle == null;
+    }
+
+    _shouldEndRound(){
+        return this.passCount == this.users.length - 1;
+    }
+
+    _endRound(){
+        this.curStyle = null;
+        this.curStyleRank = 0;
+        this.curUser = this.actions[this.actions.length - this.users.length].user;
+        this.passCount = 0;
     }
    
 }

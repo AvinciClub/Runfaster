@@ -95,6 +95,17 @@ function deckContains3Heart(deck){
     return deckContains('H', '3');
 }
 
+function removeFromDeck(deck, cards){
+    for (let c of cards){
+        let index = deck.findIndex((e) => {
+            e.gene == c.gene;
+        });
+        if (index != -1){
+            deck.splice(index);
+        }
+    }
+}
+
 export default Card;
 export {shuffle, createCardDeck, initialDeck, createDeckGroups,
-    deckContains, deckContains3Heart};
+    deckContains, deckContains3Heart, removeFromDeck};
