@@ -3,6 +3,19 @@ import Card, * as C from './card';
 import findStyle, * as S from './styles';
 import EventEmitter from 'wolfy87-eventemitter';
 
+// Game event object
+let gameEvent = new EventEmitter();
+// Game events
+export const EVT_LOAD = "load";
+export const EVT_START = "start";
+export const EVT_END = "end";
+export const EVT_JOIN = "join";
+
+export const EVT_NEWUSER = "new_user";
+export const EVT_NEWACTION = "new_action";
+
+
+
 class Game {
     constructor(){
         // book keeping properties
@@ -21,6 +34,8 @@ class Game {
 
         // action list
         this.actions = [];
+
+        gameEvent.emitEvent(EVT_LOAD, ["test1", 2]);
     }
 
     // join a game
@@ -195,9 +210,9 @@ function createGame(){
         return;
     }
     theGame = new Game();
-    jone(U.me);
-    theGame.owner = me;
+    theGame.join(U.me);
+    theGame.owner = U.me;
 }
 
 export default theGame;
-export {Game, createGame};
+export {Game, createGame, gameEvent};
