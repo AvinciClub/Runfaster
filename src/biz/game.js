@@ -6,11 +6,9 @@ import EventEmitter from 'wolfy87-eventemitter';
 // Game event object
 let gameEvent = new EventEmitter();
 // Game events
-export const EVT_LOAD = "load";
-export const EVT_START = "start";
-export const EVT_END = "end";
-export const EVT_JOIN = "join";
-
+export const EVT_LOAD = "loaded";
+export const EVT_START = "started";
+export const EVT_END = "ended";
 export const EVT_NEWUSER = "new_user";
 export const EVT_NEWACTION = "new_action";
 
@@ -35,8 +33,50 @@ class Game {
         // action list
         this.actions = [];
 
-        gameEvent.emitEvent(EVT_LOAD, ["test1", 2]);
+        gameEvent.emitEvent(EVT_LOAD, ["joined", 2]);
     }
+
+    // load 
+    load() {
+        // Check whether store has the game. If not save it to store.
+
+    }
+
+    join() {
+        // Check whether user already in, if not push to store.
+
+    }
+
+    start() {
+        // initalize state and push to store
+
+    }
+
+    draw() {
+        // Valide action and push to store.
+
+    }
+
+    _joined(user) {
+        // add user
+
+        gameEvent.emitEvent(EVT_NEWUSER, user)
+    }
+
+    _started() {
+        // initialize state and set current user.
+
+        gameEvent.emitEvent(EVT_START)
+
+    }
+
+    _drawed() {
+        // add actions and change state
+
+        gameEvent.emitEvent(EVT_NEWACTION)
+
+    }
+
 
     // join a game
     join(user){
@@ -49,6 +89,7 @@ class Game {
         else
             console.log("No seat left for the game.")
     }
+
     start(){
         if (this.canStart()){
             // Initialize state
