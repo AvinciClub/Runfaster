@@ -8,7 +8,7 @@ class Style {
 
         // Style rank index
         // e.g. for TripleBringOne, the second card(rankIndex = 1) decides style rank
-        // for FourthBringTwo, the third card(randkIndex = 2) decides style rank
+        // for FourthBringTwo, the third card(rankIndex = 2) decides style rank
         // for all other styles, the first card decides style rank
         this.rankIndex = 0; 
     }
