@@ -33,7 +33,7 @@ class Game {
         // action list
         this.actions = [];
 
-        gameEvent.emitEvent(EVT_LOAD, ["joined", 2]);
+        //gameEvent.emitEvent(EVT_LOAD, ["joined", 2]);
     }
 
     // load 
@@ -48,12 +48,12 @@ class Game {
     }
 
     start() {
-        // initalize state and push to store
+        // initialize state and push to store
 
     }
 
     draw() {
-        // Valide action and push to store.
+        // Validate action and push to store.
 
     }
 
@@ -67,10 +67,9 @@ class Game {
         // initialize state and set current user.
 
         gameEvent.emitEvent(EVT_START)
-
     }
 
-    _drawed() {
+    _drawn() {
         // add actions and change state
 
         gameEvent.emitEvent(EVT_NEWACTION)
