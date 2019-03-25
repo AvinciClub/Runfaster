@@ -1,7 +1,8 @@
 import User, * as U from './user';
 import Card, * as C from './card';
 import findStyle, * as S from './styles';
-i//mport EventEmitter from 'wolfy87-eventemitter';
+import Store from './data/gamestore';
+//mport EventEmitter from 'wolfy87-eventemitter';
 
 // Game event object
 //let gameEvent = new EventEmitter();
@@ -23,7 +24,7 @@ class Game {
         this.owner = null; // The user created this game
 
         // state related properties
-        this.state = []; // State is an object of mapping of user->cards
+        this.state = {}; // State is an object of mapping of user->cards
         this.curUser = -1; // User on turn
         this.curStyle = null; // current style 
         this.curStyleRank = 0; // current style rank  
@@ -45,51 +46,58 @@ class Game {
     // load 
     load() {
         // Check whether store has the game. If not save it to store.
-
+        Store.load().then(function(){
+            console.log("Game loaded from Store.");
+        });
     }
 
     join(user) {
         // Check whether user already in, if not push to store.
-
+        if (!this.users.includes(user)){
+            Store.pushUser(user).then(function(){
+                console.log("User " + user + ' pushed.');
+            });
+        }
     }
 
-    start() {
-        // initialize state and push to store
-
+    start(){
+        if (this.canStart()){
+            // Initialize state
+            let state = {};
+            let cardGroups = C.createDeckGroups(this.users.length);
+            for (let i = 0; i < this.users.length; i++){
+                state[this.users[i]] = cardGroups[i];
+                // Set current user
+                //if (curUser == -1){
+                //    if (C.deckContains3Heart(cardGroups[i])){
+                //        this.curUser = i;
+                //    }   
+                //}
+            }
+            Store.pushStart(state).then(function(){
+                console.log("Start game pushed.");
+            });
+        }
     }
 
-    draw(user, cards) {
+    draw(cards) {
         // Validate action and push to store.
-
+        let curUser = this.users[this.curUser];
+        if (curUser != U.me){
+            throw "It's not your turn.";
+        }
+        if (validateDraw(cards)){
+            // Save action to database
+            let action = {user: curUser, cards: cards };
+            Store.pushAction(action).then(function(){
+                console.log("Action pushed.");
+            });
+        }
     }
 
     // Routines to be called by data layer
     _joined(user) {
         // add user
-        if (this.onJoin){
-            this.onJoin(user)
-        }
-        //gameEvent.emitEvent(EVT_NEWUSER, user)
-    }
-
-    _started() {
-        // initialize state and set current user.
-        if (this.onStart){
-            this.onStart(state)
-        }
-        //gameEvent.emitEvent(EVT_START)
-    }
-
-    _newAction(action) {
-        // add actions and change state
-        if (this.onAction){
-            this.onAction(action)
-        }
-    }
-
-
-    // join a game
-    join(user){
         if (this.users.length < 3){
             if (this.users.length == 1){
                 this.owner = user;
@@ -98,27 +106,51 @@ class Game {
         }
         else
             console.log("No seat left for the game.")
+          
+        // call back
+        if (this.onJoin){
+            this.onJoin(user)
+        }
+        //gameEvent.emitEvent(EVT_NEWUSER, user)
     }
 
-    start(){
-        if (this.canStart()){
-            // Initialize state
-            cardGroups = C.createDeckGroups(this.users.length);
-            for (let i = 0; i < this.users.length; i++){
-                this.state.push(cardGroups[i]);
-                // Set current user
-                if (curUser == -1){
-                    if (C.deckContains3Heart(cardGroups[i])){
-                        this.curUser = i;
-                    }   
-                }
-            }
+    _started(state) {
+        // Assign initial state
+        Object.assign(this.state, state);
+
+        // Set current user
+        if (curUser == -1){
+            if (C.deckContains3Heart(cardGroups[i])){
+                this.curUser = i;
+            }   
         }
+
+        // Call back
+        if (this.onStart){
+            this.onStart(this.state)
+        }
+        //gameEvent.emitEvent(EVT_START)
+    }
+
+    _newAction(action) {
+        if (action.user != this.curUserName)
+            console.log("Turn messed up! " + action.user + ":" + this.curUserName);
+        if (!__validateDraw(action.cards)){
+            console.log("Invalid draw from user " + action.user);
+        }
+        this.actions.push(action);
+        __dispatch(action);
+        __nextUser();
+        // add actions and change state
+        if (this.onAction){
+            this.onAction(action)
+        }
+        
     }
 
     // Check whether the draw is valid
     // if 'cards' is null, it means 'pass'
-    validateDraw(cards){
+    __validateDraw(cards){
         // First draw
         if (this.actions.length == 0){
             if (cards == null) {  // cannot be pass
@@ -167,19 +199,8 @@ class Game {
         }
     }
 
-    draw(cards){
-        if (this.users[this.curUser] != U.me){
-            throw "It's not your turn.";
-        }
-        if (validateDraw(cards)){
-            // Save action to database
-            let action = {user: this.curUser, cards: cards };
-        }
-
-    }
-
     // dispatch the action, this will change the state
-    dispatch(action){
+    __dispatch(action){
         // Book keeping action
         this.actions.push(action);
 
@@ -220,7 +241,7 @@ class Game {
         return this.users.length >= 3;
     }
 
-    _nextUser(){
+    __nextUser(){
         if (this.curUser == this.users.length - 1){
             this.curUser = 0;
         }
@@ -247,8 +268,28 @@ class Game {
     _endRound(){
         this.curStyle = null;
         this.curStyleRank = 0;
-        this.curUser = this.actions[this.actions.length - this.users.length].user;
+        this.curUser = thisUsrIndex(this.actions[this.actions.length - this.users.length].user);
         this.passCount = 0;
+    }
+
+    get curUserName(){
+        if (this.curUser == -1 || this.users.length == 0)
+            return "";
+        else
+            return this.users[this.curUser];
+    }
+
+    get roundEnded(){
+        return this.curStyle == null;
+    }
+
+    userIndex(user){
+        for (let i = 0; i < this.users.length; i++){
+            if (this.users[i] == user){
+                return i;
+            }    
+        }
+        return -1;
     }
    
 }

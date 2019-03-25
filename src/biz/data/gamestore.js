@@ -52,6 +52,8 @@ class GameStore {
             let gameSnap = doc.data();
             if (gameObj.startTime === null && gameSnap.startTime){
                 // game started. Update game state)
+                gameObj.startTime = gameSnap.startTime.toDate();
+                gameObj._started(gameSnap.state);
             }
         });
 
@@ -63,6 +65,31 @@ class GameStore {
             });
         });
 
+        this.actionssRef.onSnapshot(function(snapShot){
+            snapShot.docChanges().forEach(function(change){
+                if (change.type === 'added'){
+                    gameObj._newAction(change.doc.data());
+                }
+            });
+        });        
+    }
+
+    // Push start state to store
+    async pushStart(state){
+        await this.rootRef.set({
+            state: state,
+            startTime: new firebase.firestore.TimeStamp.now,
+        }, {merge: true});
+    }
+
+    // Push user to store
+    async pushUser(user){
+        await this.usersRef.add({name: user});
+    }
+
+    // Push action
+    async pushAction(action){
+        await this.actionsRef.add(action);
     }
 }
 
