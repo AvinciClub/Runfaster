@@ -1,16 +1,16 @@
 import User, * as U from './user';
 import Card, * as C from './card';
 import findStyle, * as S from './styles';
-import EventEmitter from 'wolfy87-eventemitter';
+i//mport EventEmitter from 'wolfy87-eventemitter';
 
 // Game event object
-let gameEvent = new EventEmitter();
+//let gameEvent = new EventEmitter();
 // Game events
-export const EVT_LOAD = "loaded";
-export const EVT_START = "started";
-export const EVT_END = "ended";
-export const EVT_NEWUSER = "new_user";
-export const EVT_NEWACTION = "new_action";
+//export const EVT_LOAD = "loaded";
+//export const EVT_START = "started";
+//export const EVT_END = "ended";
+//export const EVT_NEWUSER = "new_user";
+//export const EVT_NEWACTION = "new_action";
 
 
 
@@ -33,16 +33,22 @@ class Game {
         // action list
         this.actions = [];
 
+        // call backs - UI layer need hook these callbacks
+        this.onStart = null;
+        this.onJoin = null;
+        this.onAction = null;
+
         //gameEvent.emitEvent(EVT_LOAD, ["joined", 2]);
     }
 
+    // Routines to be called by UI layer
     // load 
     load() {
         // Check whether store has the game. If not save it to store.
 
     }
 
-    join() {
+    join(user) {
         // Check whether user already in, if not push to store.
 
     }
@@ -52,28 +58,33 @@ class Game {
 
     }
 
-    draw() {
+    draw(user, cards) {
         // Validate action and push to store.
 
     }
 
+    // Routines to be called by data layer
     _joined(user) {
         // add user
-
-        gameEvent.emitEvent(EVT_NEWUSER, user)
+        if (this.onJoin){
+            this.onJoin(user)
+        }
+        //gameEvent.emitEvent(EVT_NEWUSER, user)
     }
 
     _started() {
         // initialize state and set current user.
-
-        gameEvent.emitEvent(EVT_START)
+        if (this.onStart){
+            this.onStart(state)
+        }
+        //gameEvent.emitEvent(EVT_START)
     }
 
-    _drawn() {
+    _newAction(action) {
         // add actions and change state
-
-        gameEvent.emitEvent(EVT_NEWACTION)
-
+        if (this.onAction){
+            this.onAction(action)
+        }
     }
 
 
