@@ -65,7 +65,7 @@ class GameStore {
             });
         });
 
-        this.actionssRef.onSnapshot(function(snapShot){
+        this.actionsRef.onSnapshot(function(snapShot){
             snapShot.docChanges().forEach(function(change){
                 if (change.type === 'added'){
                     gameObj._newAction(change.doc.data());
