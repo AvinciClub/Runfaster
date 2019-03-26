@@ -46,7 +46,7 @@ class Game {
     // load 
     load() {
         // Check whether store has the game. If not save it to store.
-        Store.load().then(function(){
+        Store.load(this).then(function(){
             console.log("Game loaded from Store.");
         });
     }
@@ -98,7 +98,7 @@ class Game {
     // Routines to be called by data layer
     _joined(user) {
         // add user
-        if (this.users.length < 3){
+        if (this.users.length < 4){
             if (this.users.length == 1){
                 this.owner = user;
             }
@@ -294,17 +294,22 @@ class Game {
    
 }
 
-let theGame = null;
+//let theGame = null;
 
 function createGame(){
     if (!U.isCheckedin()){
         console.log("User not checked in.")
         return;
     }
-    theGame = new Game();
-    theGame.join(U.me);
-    theGame.owner = U.me;
+    let theGame = new Game();
+    theGame.load();
+    theGame.join(U.me.name);
+    theGame.owner = U.me.name;
+
+    return theGame;
+
+
 }
 
-export default theGame;
-export {Game, createGame, gameEvent};
+//export default theGame;
+export {Game, createGame};

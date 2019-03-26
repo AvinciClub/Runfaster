@@ -5,12 +5,14 @@ const path = require('path');
 
 module.exports = {
 
-    entry: './src/ui/index.js',
-
+    entry: {
+        main: './src/ui/index.js',
+        test: './src/ui/mock.js'
+    },
     output: {
         path: path.resolve(__dirname, 'build'),
         publicPath: '/build/',
-        filename: 'project.bundle.js'
+        filename: '[name].bundle.js'
     },
 
     module: {

@@ -66,7 +66,8 @@ class SingleConnectS extends Style {
 class DoubleConnectS extends Style {
     constructor(){
         super("DoubleConnect");
-    }s
+    }
+    
     validate(cards){
         for(let i = 0; i < cards.length-1; i++){
             //If even, card and next should be equal, If index odd, next card should be one greater than before

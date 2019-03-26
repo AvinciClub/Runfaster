@@ -1,0 +1,1 @@
+import User, * as U from './user';
