@@ -3,14 +3,17 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+    <meta name="metro4:init" content="false">
     <!-- Metro 4 -->
     <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css">
   </head>
   <body>
     <div class="container" id="app">
         <H1>Test</H1>
-        <H2>{{message}}</H2>
+        <div class="form-group">
+            <span>User Name:</span><input v-model="user"/>
+            <button class="button primary mini" v-on:click="join">Join!</button>
+        </div>        
     </div>
 
     <!-- jQuery first, then Metro UI JS -->

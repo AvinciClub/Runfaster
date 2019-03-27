@@ -78,13 +78,15 @@ class GameStore {
     async pushStart(state){
         await this.rootRef.set({
             state: state,
-            startTime: new firebase.firestore.TimeStamp.now,
+            startTime: firebase.firestore.FieldValue.serverTimestamp(),
         }, {merge: true});
     }
 
     // Push user to store
     async pushUser(user){
-        await this.usersRef.add({name: user});
+        await this.usersRef.add({name: user,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
     }
 
     // Push action

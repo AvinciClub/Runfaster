@@ -99,7 +99,7 @@ class Game {
     _joined(user) {
         // add user
         if (this.users.length < 4){
-            if (this.users.length == 1){
+            if (this.users.length == 0){
                 this.owner = user;
             }
             this.users.push(user);
@@ -297,14 +297,14 @@ class Game {
 //let theGame = null;
 
 function createGame(){
-    if (!U.isCheckedin()){
-        console.log("User not checked in.")
-        return;
-    }
+    //if (!U.isCheckedin()){
+    //    console.log("User not checked in.")
+    //    return;
+    //}
     let theGame = new Game();
     theGame.load();
-    theGame.join(U.me.name);
-    theGame.owner = U.me.name;
+    //theGame.join(U.me.name);
+    //theGame.owner = U.me.name;
 
     return theGame;
 
