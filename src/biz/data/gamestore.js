@@ -35,17 +35,15 @@ class GameStore {
 
         let root = await this.rootRef.get();
         if (root && root.exists){
-            let userSnap = await this.usersRef.get();
+            /*let userSnap = await this.usersRef.get();
             gameObj.users = [];
             userSnap.forEach(function(doc){
                 gameObj.users.push(doc.data().name);
             });
-            
+            */
         }
         else{
             await this.rootRef.set({name: "Run Faster"});
-            await this.usersRef.add({name: "test1"});
-            await this.usersRef.add({name: "test2"});
         }
 
         this.rootRef.onSnapshot(function(doc){

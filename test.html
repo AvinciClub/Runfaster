@@ -13,6 +13,13 @@
         <div class="form-group">
             <span>User Name:</span><input v-model="user"/>
             <button class="button primary mini" v-on:click="join">Join!</button>
+        </div>
+        <div>
+          <ul>
+            <li v-for="u in users">
+              {{ u }}
+            </li>
+          </ul>
         </div>        
     </div>
 

@@ -35,6 +35,7 @@ class Game {
         this.actions = [];
 
         // call backs - UI layer need hook these callbacks
+        this.onLoad = null;
         this.onStart = null;
         this.onJoin = null;
         this.onAction = null;
@@ -48,11 +49,18 @@ class Game {
         // Check whether store has the game. If not save it to store.
         Store.load(this).then(function(){
             console.log("Game loaded from Store.");
-        });
+            if (this.onLoad){
+                this.onLoad(this);
+            }
+        }.bind(this));
     }
 
     join(user) {
         // Check whether user already in, if not push to store.
+        if (this.users.length >= 4){
+            console.log("No seat for this game.");
+            return;
+        }
         if (!this.users.includes(user)){
             Store.pushUser(user).then(function(){
                 console.log("User " + user + ' pushed.');
