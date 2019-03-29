@@ -12,6 +12,13 @@ theGame.onStart = function(){
   app.state = theGame.state;
   app.users = theGame.users;
   app.curUser = theGame.curUser;
+
+  for (let u in app.state){
+    app.state[u].forEach(c => {
+      c.selected = false;      
+    });
+  }
+
 }
 
 //theGame.start()
@@ -33,6 +40,10 @@ var app = new Vue({
       },
       isMyTurn: function(user){
         return theGame.users[theGame.curUser] == user;
+      },
+      selectCard: function(c){
+        c.selected = (!c.selected);
+        this.$forceUpdate();
       }
     },
     mounted: function () {

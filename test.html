@@ -35,9 +35,12 @@
                         </td>
                         <td>
                             <div class="tiles-grid">
-                                <div data-size="small" v-for="c in value" data-role="tile" class="bg-green">
+                              <div v-for="c in value" >
+                                  <div data-size="small" data-role="tile" class="bg-green" v-bind:class="{selected: c.selected}" v-on:click="selectCard(c)">
+                                    <br>  
                                     <h2>{{c.suit}}:{{c.face}} </h2>
-                                </div>
+                                  </div>  
+                              </div>
                             </div>
                         </td>
                     </tr>
