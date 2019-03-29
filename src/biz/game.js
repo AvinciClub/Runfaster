@@ -74,7 +74,9 @@ class Game {
             let state = {};
             let cardGroups = C.createDeckGroups(this.users.length);
             for (let i = 0; i < this.users.length; i++){
-                state[this.users[i]] = cardGroups[i];
+                state[this.users[i]] = cardGroups[i].map(function(v){
+                    return Object.assign({}, v);
+                });
                 // Set current user
                 //if (curUser == -1){
                 //    if (C.deckContains3Heart(cardGroups[i])){
@@ -124,13 +126,23 @@ class Game {
 
     _started(state) {
         // Assign initial state
-        Object.assign(this.state, state);
+        this.users = [];
+        for (const k in state){
+            this.state[k] = state[k].map((v)=>{
+                return new Card(v.suit, v.face)
+            });
+            this.users.push(k);
+        }
 
         // Set current user
-        if (curUser == -1){
-            if (C.deckContains3Heart(cardGroups[i])){
-                this.curUser = i;
-            }   
+        if (this.curUser == -1){
+            for (const k in this.state){
+                if (C.deckContains3Heart(this.state[k])){
+                    this.curUser = this.users.indexOf(k);
+                    break;
+                } 
+            }
+  
         }
 
         // Call back

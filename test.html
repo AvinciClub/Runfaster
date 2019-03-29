@@ -9,17 +9,41 @@
   </head>
   <body>
     <div class="container" id="app">
-        <H1>Test</H1>
+        <H1>Run faster test</H1>
         <div class="form-group">
             <span>User Name:</span><input v-model="user"/>
             <button class="button primary mini" v-on:click="join">Join!</button>
+            <button class="button primary mini" :disabled="!canStart" v-on:click="start">Start</button>
         </div>
+        <br>
         <div>
-          <ul>
-            <li v-for="u in users">
-              {{ u }}
-            </li>
-          </ul>
+            Users: <span v-for="u in users">{{u}}&nbsp; &nbsp; </span>
+        </div>
+        <br>
+        <div>
+            <table class="table table-border striped">
+                <thead>
+                    <tr>
+                        <th width="100px">User</th>
+                        <th>Cards</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(value, key) in state">
+                        <td>
+                            {{key}}
+                        </td>
+                        <td>
+                            <div class="tiles-grid">
+                                <div data-size="small" v-for="c in value" data-role="tile" class="bg-green">
+                                    <span>{{c.suit}}: </span>
+                                    <span>{{c.face}}</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>        
     </div>
 

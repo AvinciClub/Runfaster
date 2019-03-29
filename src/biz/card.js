@@ -84,7 +84,7 @@ function createDeckGroups(numOfGroups){
 
 function deckContains(suit, face, deck){
     for (let c of deck){
-        if (c.suit == suit && c.fac == face){
+        if (c.suit == suit && c.face == face){
             return true;
         }
     }
@@ -92,7 +92,7 @@ function deckContains(suit, face, deck){
 }
 
 function deckContains3Heart(deck){
-    return deckContains('H', '3');
+    return deckContains('H', '3', deck);
 }
 
 function removeFromDeck(deck, cards){

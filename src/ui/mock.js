@@ -1,26 +1,34 @@
 import * as U from '../biz/user';
 import theGame, {createGame} from '../biz/game';
 
-U.checkin("Jon", 0);
 let theGame = createGame();
-theGame.onLoad = function(game){
-  app.users = theGame.users;  
-}
 
 theGame.onJoin = function(user){
   app.users = theGame.users;
+  app.canStart = theGame.canStart();
 }
+
+theGame.onStart = function(){
+  app.state = theGame.state;
+  app.users = theGame.users;
+}
+
 //theGame.start()
 var app = new Vue({
     el: '#app',
     data: {
       message: 'Hello Vue!',
       user: 'test',
-      users: theGame.users      
+      users: theGame.users,
+      canStart: false,
+      state:{}     
     },
     methods: {
       join: function(){
         theGame.join(this.user);
+      },
+      start: function(){
+        theGame.start();
       }
     },
     mounted: function () {
