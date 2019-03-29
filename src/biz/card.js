@@ -67,6 +67,16 @@ function initialDeck(){
     return shuffle(createCardDeck());
 }
 
+function createDeckGroups(numOfGroups){
+    return splitDeck(numOfGroups, initialDeck());
+}
+
+
+function sortDeck(deck){
+    deck.sort(function(a, b){return a.rank - b.rank});
+}
+
+
 function splitDeck(numOfUsers, deck){
     let length = deck.length;
     let ret = [];
@@ -75,11 +85,11 @@ function splitDeck(numOfUsers, deck){
         deck = deck.slice(Math.floor(length/numOfUsers), deck.length);
     }
     ret.push(deck)
-    return ret
-}
 
-function createDeckGroups(numOfGroups){
-    return splitDeck(numOfGroups, initialDeck());
+    ret.forEach(function(v){
+        sortDeck(v);
+    });
+    return ret
 }
 
 function deckContains(suit, face, deck){

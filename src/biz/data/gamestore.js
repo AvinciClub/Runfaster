@@ -46,15 +46,6 @@ class GameStore {
             await this.rootRef.set({name: "Run Faster"});
         }
 
-        this.rootRef.onSnapshot(function(doc){
-            let gameSnap = doc.data();
-            if (gameObj.startTime === null && gameSnap.startTime){
-                // game started. Update game state)
-                gameObj.startTime = gameSnap.startTime.toDate();
-                gameObj._started(gameSnap.state);
-            }
-        });
-
         this.usersRef.onSnapshot(function(snapShot){
             snapShot.docChanges().forEach(function(change){
                 if (change.type === 'added'){
@@ -69,7 +60,16 @@ class GameStore {
                     gameObj._newAction(change.doc.data());
                 }
             });
-        });        
+        });  
+    
+        this.rootRef.onSnapshot(function(doc){
+            let gameSnap = doc.data();
+            if (gameObj.startTime === null && gameSnap.startTime){
+                // game started. Update game state)
+                gameObj.startTime = gameSnap.startTime.toDate();
+                gameObj._started(gameSnap.state);
+            }
+        });      
     }
 
     // Push start state to store

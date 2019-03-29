@@ -31,13 +31,12 @@
                 <tbody>
                     <tr v-for="(value, key) in state">
                         <td>
-                            {{key}}
+                            <span v-if="isMyTurn(key)">*</span>{{key}}
                         </td>
                         <td>
                             <div class="tiles-grid">
                                 <div data-size="small" v-for="c in value" data-role="tile" class="bg-green">
-                                    <span>{{c.suit}}: </span>
-                                    <span>{{c.face}}</span>
+                                    <h2>{{c.suit}}:{{c.face}} </h2>
                                 </div>
                             </div>
                         </td>

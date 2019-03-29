@@ -11,6 +11,7 @@ theGame.onJoin = function(user){
 theGame.onStart = function(){
   app.state = theGame.state;
   app.users = theGame.users;
+  app.curUser = theGame.curUser;
 }
 
 //theGame.start()
@@ -21,7 +22,7 @@ var app = new Vue({
       user: 'test',
       users: theGame.users,
       canStart: false,
-      state:{}     
+      state:{}
     },
     methods: {
       join: function(){
@@ -29,6 +30,9 @@ var app = new Vue({
       },
       start: function(){
         theGame.start();
+      },
+      isMyTurn: function(user){
+        return theGame.users[theGame.curUser] == user;
       }
     },
     mounted: function () {
