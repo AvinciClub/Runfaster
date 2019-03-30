@@ -93,12 +93,14 @@ class Game {
     draw(cards) {
         // Validate action and push to store.
         let curUser = this.users[this.curUser];
-        if (curUser != U.me){
-            throw "It's not your turn.";
-        }
-        if (validateDraw(cards)){
+        //if (curUser != U.me){
+        //    throw "It's not your turn.";
+        //}
+        if (this.__validateDraw(cards)){
             // Save action to database
-            let action = {user: curUser, cards: cards };
+            let action = {user: curUser, cards: cards.map((v)=>{
+                return Object.assign({}, v)
+            }) };
             Store.pushAction(action).then(function(){
                 console.log("Action pushed.");
             });
@@ -155,15 +157,20 @@ class Game {
     _newAction(action) {
         if (action.user != this.curUserName)
             console.log("Turn messed up! " + action.user + ":" + this.curUserName);
-        if (!__validateDraw(action.cards)){
+        if (!this.__validateDraw(action.cards)){
             console.log("Invalid draw from user " + action.user);
         }
-        this.actions.push(action);
-        __dispatch(action);
-        __nextUser();
+        let actionEx = {};
+        actionEx.user = action.user;
+        actionEx.cards = action.cards.map((v)=>{
+            return new Card(v.suit, v.face);
+        });
+        this.actions.push(actionEx);
+        this.__dispatch(actionEx);
+        this.__nextUser();
         // add actions and change state
         if (this.onAction){
-            this.onAction(action)
+            this.onAction(actionEx)
         }
         
     }
@@ -173,16 +180,16 @@ class Game {
     __validateDraw(cards){
         // First draw
         if (this.actions.length == 0){
-            if (cards == null) {  // cannot be pass
+            if (cards.length == 0) {  // cannot be pass
                 return false;
             }
-            if (!c.deckContains3Heart(cards)){ // must have heart 3
+            if (!C.deckContains3Heart(cards)){ // must have heart 3
                 return false;
             }
         }
 
         // keep one at last
-        if (this.state[this.curUser].length == cards.length && cards.length != 1){
+        if (this.state[this.curUserName].length == cards.length && cards.length != 1){
             return false;
         }
         
@@ -208,7 +215,7 @@ class Game {
                     }
                 }
                 else{
-                    if (cards[s.rankIndex] <= this.curStyleRank){
+                    if (cards[s.rankIndex].rank <= this.curStyleRank){
                         return false;
                     }
                     else{
@@ -228,7 +235,7 @@ class Game {
         if(action.cards != null){
             C.removeFromDeck(this.state[action.user], action.cards);
             // Check winner
-            if (this.sate[action.user].length == 0){
+            if (this.state[action.user].length == 0){
                 this.winner = action.user;
                 //TBD: Emit winner event
                 return;
@@ -239,7 +246,7 @@ class Game {
         let s = findStyle(action.cards);
         if (this._isStartOfRound()){
             this.curStyle = s;
-            this.curStyleRank = action.cards[s.rankIndex];
+            this.curStyleRank = action.cards[s.rankIndex].rank;
         }
 
         // Set pass count

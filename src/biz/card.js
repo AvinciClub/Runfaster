@@ -108,10 +108,10 @@ function deckContains3Heart(deck){
 function removeFromDeck(deck, cards){
     for (let c of cards){
         let index = deck.findIndex((e) => {
-            e.gene == c.gene;
+            return e.gene == c.gene;
         });
         if (index != -1){
-            deck.splice(index);
+            deck.splice(index, 1);
         }
     }
 }

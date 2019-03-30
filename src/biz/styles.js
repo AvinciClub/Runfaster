@@ -24,7 +24,7 @@ class PassS extends Style {
         super("Pass");
     }
     validate(cards){
-        return cards == null;
+        return cards.length == 0;
     }
 }
 
