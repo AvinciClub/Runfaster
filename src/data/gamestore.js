@@ -30,8 +30,10 @@ class GameStore {
         this._actionsPath = this._rootPath + "/actions";
 
         this.rootRef = this._db.doc(this._rootPath);
-        this.usersRef = this._db.collection(this._usersPath);
-        this.actionsRef = this._db.collection(this._actionsPath);
+        this.usersRefW = this._db.collection(this._usersPath);
+        this.actionsRefW = this._db.collection(this._actionsPath)
+        this.usersRef = this._db.collection(this._usersPath).orderBy('timeStamp');
+        this.actionsRef = this._db.collection(this._actionsPath).orderBy('timeStamp');
 
         let root = await this.rootRef.get();
         if (root && root.exists){
@@ -82,14 +84,16 @@ class GameStore {
 
     // Push user to store
     async pushUser(user){
-        await this.usersRef.add({name: user,
+        await this.usersRefW.add({name: user,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
     }
 
     // Push action
     async pushAction(action){
-        await this.actionsRef.add(action);
+        await this.actionsRefW.add(Object.assign({
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        }, action));
     }
 }
 

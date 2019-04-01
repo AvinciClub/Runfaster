@@ -6,7 +6,7 @@ let theGame = createGame();
 theGame.onJoin = function(user){
   app.users = theGame.users;
   app.canStart = theGame.canStart();
-}
+};
 
 theGame.onStart = function(){
   app.state = theGame.state;
@@ -18,7 +18,11 @@ theGame.onStart = function(){
       c.selected = false;      
     });
   }
-}
+};
+
+theGame.onInfo = function(level, message){
+  app.info = message;
+};
 
 theGame.onAction = function(){
   app.state = theGame.state;
@@ -40,6 +44,7 @@ var app = new Vue({
       user: 'test',
       users: theGame.users,
       canStart: false,
+      info: "",
       state:{}
     },
     methods: {
@@ -67,7 +72,7 @@ var app = new Vue({
         theGame.draw(cards);
       },
       pass: function(){
-        theGame.draw({user: theGame.curUser, cards: []});
+        theGame.pass();
       }
     },
     mounted: function () {

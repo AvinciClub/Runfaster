@@ -1,7 +1,7 @@
 import User, * as U from './user';
 import Card, * as C from './card';
 import findStyle, * as S from './styles';
-import Store from './data/gamestore';
+import Store from '../data/gamestore';
 //mport EventEmitter from 'wolfy87-eventemitter';
 
 // Game event object
@@ -39,6 +39,9 @@ class Game {
         this.onStart = null;
         this.onJoin = null;
         this.onAction = null;
+        this.onInfo = null;
+        this.onNewRound = null;
+        this.onEndGame = null;
 
         //gameEvent.emitEvent(EVT_LOAD, ["joined", 2]);
     }
@@ -47,23 +50,23 @@ class Game {
     // load 
     load() {
         // Check whether store has the game. If not save it to store.
-        Store.load(this).then(function(){
-            console.log("Game loaded from Store.");
+        Store.load(this).then(()=>{
+            this.__report(3, "Game loaded from Store.");
             if (this.onLoad){
                 this.onLoad(this);
             }
-        }.bind(this));
+        });
     }
 
     join(user) {
         // Check whether user already in, if not push to store.
         if (this.users.length >= 4){
-            console.log("No seat for this game.");
+            this.__report(1, "No seat for this game.");
             return;
         }
         if (!this.users.includes(user)){
-            Store.pushUser(user).then(function(){
-                console.log("User " + user + ' pushed.');
+            Store.pushUser(user).then(()=>{
+                this.__report(2, "User " + user + ' pushed.');
             });
         }
     }
@@ -84,10 +87,14 @@ class Game {
                 //    }   
                 //}
             }
-            Store.pushStart(state).then(function(){
-                console.log("Start game pushed.");
+            Store.pushStart(state).then(()=>{
+                this.__report(3, "Start game pushed.");
             });
         }
+    }
+
+    pass(){
+        draw([]);
     }
 
     draw(cards) {
@@ -101,8 +108,8 @@ class Game {
             let action = {user: curUser, cards: cards.map((v)=>{
                 return Object.assign({}, v)
             }) };
-            Store.pushAction(action).then(function(){
-                console.log("Action pushed.");
+            Store.pushAction(action).then(() => {
+                this.__report(3, "Action pushed.");
             });
         }
     }
@@ -117,7 +124,7 @@ class Game {
             this.users.push(user);
         }
         else
-            console.log("No seat left for the game.")
+            this.__report(1, "No seat left for the game.")
           
         // call back
         if (this.onJoin){
@@ -155,17 +162,21 @@ class Game {
     }
 
     _newAction(action) {
-        if (action.user != this.curUserName)
-            console.log("Turn messed up! " + action.user + ":" + this.curUserName);
+        if (action.user != this.curUserName){
+            this.__report(1, "Turn messed up! " + action.user + ":" + this.curUserName);
+            return;
+        }
+
         if (!this.__validateDraw(action.cards)){
-            console.log("Invalid draw from user " + action.user);
+            this.__report(1, "Invalid draw from user " + action.user);
+            return;
         }
         let actionEx = {};
         actionEx.user = action.user;
         actionEx.cards = action.cards.map((v)=>{
             return new Card(v.suit, v.face);
         });
-        this.actions.push(actionEx);
+        //this.actions.push(actionEx);
         this.__dispatch(actionEx);
         this.__nextUser();
         // add actions and change state
@@ -196,11 +207,13 @@ class Game {
 
         let s = findStyle(cards);
         if (s == null){ // Not valid style
+            this.__report(1, "Invalid Style!");
             return false;
         }
         else{
-            if (this._isStartOfRound){
+            if (this._isStartOfRound()){
                 if (s.name == "Pass"){
+                    this.__report(1, "Start of round cannot pass.");
                     return false;
                 }
                 return true;
@@ -208,6 +221,7 @@ class Game {
             else{
                 if (s.name != this.curStyle.name){
                     if (s.name !== "Pass"){
+                        this.__report(1, "Current round style is " + this.curStyle.name);
                         return false;
                     }
                     else{
@@ -216,9 +230,11 @@ class Game {
                 }
                 else{
                     if (cards[s.rankIndex].rank <= this.curStyleRank){
+                        this.__report(1, "Card rank is too small.");
                         return false;
                     }
                     else{
+                        this.curStyleRank = cards[s.rankIndex].rank;
                         return true;
                     }
                 }
@@ -237,6 +253,10 @@ class Game {
             // Check winner
             if (this.state[action.user].length == 0){
                 this.winner = action.user;
+                this.__report(1, this.winner + "Won the game!");
+                if (this.onEndGame){
+                    this.onEndGame(this.winner);
+                }
                 //TBD: Emit winner event
                 return;
             }
@@ -256,6 +276,10 @@ class Game {
             // Check end of round
             if (this._shouldEndRound()){
                 this._endRound();
+                if (this.onNewRound){
+                    this.onNewRound();
+                }
+                this.__report(3, "New round.");
             }           
         }
         else{
@@ -275,6 +299,13 @@ class Game {
         else{
             this.curUser++;
         }       
+    }
+
+    __report(level, message){
+        console.log(message);
+        if (this.onInfo){
+            this.onInfo(level, message);
+        }
     }
     
     _drawCards(action){
