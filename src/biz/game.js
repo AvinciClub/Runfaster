@@ -94,7 +94,7 @@ class Game {
     }
 
     pass(){
-        draw([]);
+        this.draw([]);
     }
 
     draw(cards) {
@@ -167,15 +167,16 @@ class Game {
             return;
         }
 
-        if (!this.__validateDraw(action.cards)){
-            this.__report(1, "Invalid draw from user " + action.user);
-            return;
-        }
         let actionEx = {};
         actionEx.user = action.user;
         actionEx.cards = action.cards.map((v)=>{
             return new Card(v.suit, v.face);
         });
+
+        if (!this.__validateDraw(actionEx.cards)){
+            this.__report(1, "Invalid draw from user " + actionEx.user);
+            return;
+        }        
         //this.actions.push(actionEx);
         this.__dispatch(actionEx);
         this.__nextUser();
@@ -234,7 +235,6 @@ class Game {
                         return false;
                     }
                     else{
-                        this.curStyleRank = cards[s.rankIndex].rank;
                         return true;
                     }
                 }

@@ -32,8 +32,8 @@ class GameStore {
         this.rootRef = this._db.doc(this._rootPath);
         this.usersRefW = this._db.collection(this._usersPath);
         this.actionsRefW = this._db.collection(this._actionsPath)
-        this.usersRef = this._db.collection(this._usersPath).orderBy('timeStamp');
-        this.actionsRef = this._db.collection(this._actionsPath).orderBy('timeStamp');
+        this.usersRef = this._db.collection(this._usersPath);//.orderBy('timeStamp');
+        this.actionsRef = this._db.collection(this._actionsPath);//.orderBy('timeStamp');
 
         let root = await this.rootRef.get();
         if (root && root.exists){
