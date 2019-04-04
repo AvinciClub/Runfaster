@@ -228,7 +228,11 @@ class Game {
             }
             else{
                 if (s.name != this.curStyle.name){
-                    if (s.name !== "Pass"){
+                    if(this.__isNewBomb(s)){
+                        this.__report(1, "Wow! Bomb!");
+                        return true;                       
+                    }
+                    else if (s.name !== "Pass"){
                         this.__report(1, "Current round style is " + this.curStyle.name);
                         return false;
                     }
@@ -271,7 +275,7 @@ class Game {
         
         // Set style
         let s = findStyle(action.cards);
-        if (this._isStartOfRound()){
+        if (this._isStartOfRound() || this.__isNewBomb(s)){
             this.__report(3, "New round started.");
             this.curStyle = s;
             this.curStyleRank = action.cards[s.rankIndex].rank;
@@ -314,6 +318,10 @@ class Game {
         if (this.onInfo){
             this.onInfo(level, message);
         }
+    }
+
+    __isNewBomb(s){
+        return (s.name == 'Bomb' && this.curStyle.name != 'Bomb');
     }
     
     _drawCards(action){
