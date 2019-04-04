@@ -24,7 +24,7 @@ theGame.onInfo = function(level, message){
   app.info = message;
 };
 
-theGame.onAction = function(){
+theGame.onAction = function(action){
   app.state = theGame.state;
   app.users = theGame.users;
   app.curUser = theGame.curUser;
@@ -34,7 +34,19 @@ theGame.onAction = function(){
       c.selected = false;      
     });
   }
-}
+
+  if (action.cards.length > 0)
+  app.curCards = action.cards;
+};
+
+theGame.onNewRound = function(){
+  console.log("new round started");
+  app.curCards = [];
+};
+
+theGame.onEndGame = function(winner){
+  alert("Game ended! " + winner + " won!");
+};
 
 //theGame.start()
 var app = new Vue({
@@ -45,7 +57,8 @@ var app = new Vue({
       users: theGame.users,
       canStart: false,
       info: "",
-      state:{}
+      state:{},
+      curCards: []
     },
     methods: {
       join: function(){

@@ -109,7 +109,7 @@ class Game {
                 return Object.assign({}, v)
             }) };
             Store.pushAction(action).then(() => {
-                this.__report(3, "Action pushed.");
+                this.__report(4, "Action pushed.");
             });
         }
     }
@@ -158,6 +158,8 @@ class Game {
         if (this.onStart){
             this.onStart(this.state)
         }
+
+        this.__report(3, 'Game started. You turn, ' + this.curUserName);
         //gameEvent.emitEvent(EVT_START)
     }
 
@@ -184,24 +186,29 @@ class Game {
         if (this.onAction){
             this.onAction(actionEx)
         }
+        this.__report(3, "Your turn: " + this.curUserName);
         
     }
 
     // Check whether the draw is valid
     // if 'cards' is null, it means 'pass'
     __validateDraw(cards){
-        // First draw
-        if (this.actions.length == 0){
+        if (this._isStartOfRound()){
             if (cards.length == 0) {  // cannot be pass
+                this.__report(1, "You cannot pass at start of round.");
                 return false;
             }
+        }
+        if (this.actions.length == 0){ // First draw        
             if (!C.deckContains3Heart(cards)){ // must have heart 3
+                this.__report(1, "Your draw has to include heart 3.");
                 return false;
             }
         }
 
         // keep one at last
         if (this.state[this.curUserName].length == cards.length && cards.length != 1){
+            this.__report(1, "Your need Baodan!");
             return false;
         }
         
@@ -265,19 +272,20 @@ class Game {
         // Set style
         let s = findStyle(action.cards);
         if (this._isStartOfRound()){
+            this.__report(3, "New round started.");
             this.curStyle = s;
             this.curStyleRank = action.cards[s.rankIndex].rank;
         }
 
         // Set pass count
-        if (s == 'Pass'){
+        if (s.name == 'Pass'){
             this.passCount++;
  
             // Check end of round
             if (this._shouldEndRound()){
                 this._endRound();
                 if (this.onNewRound){
-                    this.onNewRound();
+                    this.onNewRound(this.curUserName);
                 }
                 this.__report(3, "New round.");
             }           
@@ -326,7 +334,7 @@ class Game {
     _endRound(){
         this.curStyle = null;
         this.curStyleRank = 0;
-        this.curUser = thisUsrIndex(this.actions[this.actions.length - this.users.length].user);
+        //this.curUser = this.UsrIndex(this.actions[this.actions.length - this.users.length].user);
         this.passCount = 0;
     }
 

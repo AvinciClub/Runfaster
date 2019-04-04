@@ -164,7 +164,7 @@ class TripleBringOneS extends Style {
 let STYLES = [new SingleS(), new DoubleS(), 
             new SingleConnectS(), new TripleS(), 
             new BombS(), new TripleBringOneS(), 
-            new DoubleConnectS(), new TripleConnectS(), new FourBringTwo()];
+            new DoubleConnectS(), new TripleConnectS(), new FourBringTwo(), new PassS()];
 function findStyle(cards){
     cards.sort((a, b) => a.rank - b.rank);
     for (let i = 0; i < STYLES.length; i++){

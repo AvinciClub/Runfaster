@@ -49,6 +49,14 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+        <br><br>
+        <div class="tiles-grid">
+            <div v-for="c in curCards">
+                <div data-size="small" data-role="tile" class="bg-green">
+                  <h2>{{c.suit}}:{{c.face}} </h2>
+                </div>  
+            </div>          
         </div>        
     </div>
 
