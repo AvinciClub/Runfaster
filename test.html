@@ -33,7 +33,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="(value, key) in state">
-                        <td>
+                        <td width="100px">
                             <span v-if="isMyTurn(key)">*</span>{{key}}
                         </td>
                         <td>
@@ -41,7 +41,7 @@
                               <div v-for="c in value">
                                   <div data-size="small" data-role="tile" class="bg-green" v-bind:class="{selected: c.selected}" v-on:click="selectCard(c, key)">
                                     <br>  
-                                    <h2>{{c.suit}}:{{c.face}} </h2>
+                                    <h2 v-if="owners.contains(key)">{{c.suit}}:{{c.face}} </h2>
                                   </div>  
                               </div>
                             </div>

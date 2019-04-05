@@ -58,11 +58,13 @@ var app = new Vue({
       canStart: false,
       info: "",
       state:{},
-      curCards: []
+      curCards: [],
+      owners: []
     },
     methods: {
       join: function(){
         theGame.join(this.user);
+        this.owners.push(this.user);
       },
       start: function(){
         theGame.start();
@@ -71,12 +73,17 @@ var app = new Vue({
         return theGame.users[theGame.curUser] == user;
       },
       selectCard: function(c, u){
-        if (this.isMyTurn(u)){
-          c.selected = (!c.selected);
-          this.$forceUpdate();
+        if (this.owners.contains(u)){
+          if (this.isMyTurn(u)){
+            c.selected = (!c.selected);
+            this.$forceUpdate();
+          }
         }
       },
       draw: function(){
+        if (!this.owners.contains(theGame.curUserName)){
+          return;
+        }
         let cards = [];
         this.state[theGame.curUserName].forEach((c)=>{
           if (c.selected)
@@ -85,6 +92,9 @@ var app = new Vue({
         theGame.draw(cards);
       },
       pass: function(){
+        if (!this.owners.contains(theGame.curUserName)){
+          return;
+        }
         theGame.pass();
       }
     },
